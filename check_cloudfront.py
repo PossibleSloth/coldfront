@@ -11,19 +11,25 @@ DOMAIN_CHECKERS = 10
 
 def check_domain_worker(q1, q2):
     while True:
-        domain = q1.get()
-        if check_domain(domain):
-            q2.put(domain)
-        q1.task_done()
+        try:
+            domain = q1.get()
+            if check_domain(domain):
+                q2.put(domain)
+            q1.task_done()
+        except:
+            pass
 
 
 def check_cf_worker(q2, distribution_id):
     while True:
-        domain = q2.get()
-        if is_url_available(domain, distribution_id):
-            print(domain)
-            sys.stdout.flush()
-        q2.task_done()
+        try:
+            domain = q2.get()
+            if is_url_available(domain, distribution_id):
+                print(domain)
+                sys.stdout.flush()
+            q2.task_done()
+        except:
+            pass
 
 
 def check_domain(domain):
